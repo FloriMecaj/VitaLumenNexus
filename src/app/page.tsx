@@ -8,7 +8,9 @@ import {
   ChevronRight,
   Compass,
   Cpu,
+  Mail,
   Menu,
+  MessageCircle,
   Orbit,
   Radar,
   Rocket,
@@ -27,6 +29,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Sheet,
   SheetClose,
@@ -125,6 +134,29 @@ const methodology = [
   { number: "04", title: "Continuously improve." },
 ];
 
+const contactOptions = [
+  {
+    title: "Gmail",
+    description: "Send an email directly to the VitaLumen Nexus inbox.",
+    href: "mailto:vitalumennexus@gmail.com",
+    label: "vitalumennexus@gmail.com",
+    icon: Mail,
+  },
+  {
+    title: "WhatsApp",
+    description: "Start a WhatsApp conversation using a placeholder number.",
+    href: "https://wa.me/15551234567",
+    label: "+1 (555) 123-4567",
+    icon: MessageCircle,
+  },
+] satisfies Array<{
+  title: string;
+  description: string;
+  href: string;
+  label: string;
+  icon: LucideIcon;
+}>;
+
 function SectionIntro({
   label,
   title,
@@ -153,85 +185,117 @@ function SectionIntro({
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
+
+  const openContactDialog = () => {
+    setMenuOpen(false);
+    setContactDialogOpen(true);
+  };
 
   return (
-    <main className="relative overflow-x-hidden">
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-[color:var(--border)] bg-[color:var(--background)]/88 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
-          <a href="#" className="space-y-1">
-            <p className="font-display text-2xl tracking-[-0.05em] text-[color:var(--foreground)]">
-              VitaLumen Nexus
-            </p>
-            <p className="text-[10px] uppercase tracking-[0.32em] text-[color:var(--muted-foreground)]">
-              Intelligence • Innovation • Orchestration
-            </p>
-          </a>
-
-          <nav className="hidden items-center gap-8 md:flex">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="text-sm font-medium text-[color:var(--muted-foreground)] transition hover:text-[color:var(--foreground)]"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="hidden md:block">
-            <a href="#contact" className={buttonVariants()}>
-              Contact
+    <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
+      <main className="relative overflow-x-hidden">
+        <header className="fixed inset-x-0 top-0 z-50 border-b border-[color:var(--border)] bg-[color:var(--background)]/88 backdrop-blur-xl">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
+            <a href="#" className="space-y-1">
+              <p className="font-display text-2xl tracking-[-0.05em] text-[color:var(--foreground)]">
+                VitaLumen Nexus
+              </p>
+              <p className="text-[10px] uppercase tracking-[0.32em] text-[color:var(--muted-foreground)]">
+                Intelligence • Innovation • Orchestration
+              </p>
             </a>
-          </div>
 
-          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-            <SheetTrigger asChild>
+            <nav className="hidden items-center gap-8 md:flex">
+              {navItems.map((item) =>
+                item.label === "Contact" ? (
+                  <button
+                    key={item.href}
+                    type="button"
+                    onClick={openContactDialog}
+                    className="text-sm font-medium text-[color:var(--muted-foreground)] transition hover:text-[color:var(--foreground)]"
+                  >
+                    {item.label}
+                  </button>
+                ) : (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="text-sm font-medium text-[color:var(--muted-foreground)] transition hover:text-[color:var(--foreground)]"
+                  >
+                    {item.label}
+                  </a>
+                ),
+              )}
+            </nav>
+
+            <div className="hidden md:block">
               <button
                 type="button"
-                aria-label="Open navigation menu"
-                aria-expanded={menuOpen}
-                className="inline-flex size-12 items-center justify-center rounded-full border border-[color:var(--border)] bg-white/70 text-[color:var(--foreground)] md:hidden"
+                onClick={openContactDialog}
+                className={buttonVariants()}
               >
-                <Menu className="size-5" />
+                Contact
               </button>
-            </SheetTrigger>
+            </div>
 
-            <SheetContent className="md:hidden">
-              <SheetHeader className="border-b border-[color:var(--border)] pr-16">
-                <SheetTitle>Navigate</SheetTitle>
-                <SheetDescription>
-                  Explore VitaLumen Nexus sections from this mobile flyout.
-                </SheetDescription>
-              </SheetHeader>
+            <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+              <SheetTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="Open navigation menu"
+                  aria-expanded={menuOpen}
+                  className="inline-flex size-12 items-center justify-center rounded-full border border-[color:var(--border)] bg-white/70 text-[color:var(--foreground)] md:hidden"
+                >
+                  <Menu className="size-5" />
+                </button>
+              </SheetTrigger>
 
-              <nav className="flex flex-1 flex-col gap-2 p-5">
-                {navItems.map((item) => (
-                  <SheetClose asChild key={item.href}>
-                    <a
-                      href={item.href}
-                      className="rounded-2xl border border-transparent px-4 py-3 text-sm font-medium text-[color:var(--foreground)] transition hover:border-[color:var(--border)] hover:bg-white/60"
-                    >
-                      {item.label}
-                    </a>
-                  </SheetClose>
-                ))}
+              <SheetContent className="md:hidden">
+                <SheetHeader className="border-b border-[color:var(--border)] pr-16">
+                  <SheetTitle>Navigate</SheetTitle>
+                  <SheetDescription>
+                    Explore VitaLumen Nexus sections from this mobile flyout.
+                  </SheetDescription>
+                </SheetHeader>
 
-                <SheetClose asChild>
-                  <a
-                    href="#contact"
+                <nav className="flex flex-1 flex-col gap-2 p-5">
+                  {navItems.map((item) =>
+                    item.label === "Contact" ? (
+                      <button
+                        key={item.href}
+                        type="button"
+                        onClick={openContactDialog}
+                        className="rounded-2xl border border-transparent px-4 py-3 text-left text-sm font-medium text-[color:var(--foreground)] transition hover:border-[color:var(--border)] hover:bg-white/60"
+                      >
+                        {item.label}
+                      </button>
+                    ) : (
+                      <SheetClose asChild key={item.href}>
+                        <a
+                          href={item.href}
+                          className="rounded-2xl border border-transparent px-4 py-3 text-sm font-medium text-[color:var(--foreground)] transition hover:border-[color:var(--border)] hover:bg-white/60"
+                        >
+                          {item.label}
+                        </a>
+                      </SheetClose>
+                    ),
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={openContactDialog}
                     className={cn(buttonVariants(), "mt-3 flex w-full")}
                   >
                     Contact
-                  </a>
-                </SheetClose>
-              </nav>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </header>
+                  </button>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </header>
 
-      <section className="section-shell px-5 pb-20 pt-32 md:px-8 md:pb-28 md:pt-36">
+        <section className="section-shell px-5 pb-20 pt-32 md:px-8 md:pb-28 md:pt-36">
         <div className="mx-auto grid max-w-7xl items-start gap-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="space-y-9">
             <Badge className="border-[color:var(--border-strong)] bg-white/70 text-[color:var(--primary)]">
@@ -549,53 +613,96 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="contact" className="px-5 py-20 md:px-8 md:py-28">
-        <div className="mx-auto grid max-w-7xl gap-8 rounded-[40px] border border-[color:var(--border-strong)] bg-[color:var(--foreground)] px-7 py-10 text-white md:grid-cols-[1.1fr_0.9fr] md:px-12 md:py-14">
-          <div className="space-y-5">
-            <Badge className="w-fit border-white/15 bg-white/10 text-white">
-              Contact & Partnerships
-            </Badge>
-            <h2 className="font-display text-4xl tracking-[-0.05em] md:text-5xl">
-              Collaborate with us.
-            </h2>
-            <p className="max-w-2xl text-base leading-8 text-white/72">
-              We welcome discussions with researchers, innovators, technology
-              companies, and organizations interested in advanced intelligence
-              systems and next-generation technology development.
+        <section id="contact" className="px-5 py-20 md:px-8 md:py-28">
+          <div className="mx-auto grid max-w-7xl gap-8 rounded-[40px] border border-[color:var(--border-strong)] bg-[color:var(--foreground)] px-7 py-10 text-white md:grid-cols-[1.1fr_0.9fr] md:px-12 md:py-14">
+            <div className="space-y-5">
+              <Badge className="w-fit border-white/15 bg-white/10 text-white">
+                Contact & Partnerships
+              </Badge>
+              <h2 className="font-display text-4xl tracking-[-0.05em] md:text-5xl">
+                Collaborate with us.
+              </h2>
+              <p className="max-w-2xl text-base leading-8 text-white/72">
+                We welcome discussions with researchers, innovators, technology
+                companies, and organizations interested in advanced intelligence
+                systems and next-generation technology development.
+              </p>
+            </div>
+
+            <div className="flex flex-col justify-between gap-8 rounded-[30px] border border-white/12 bg-white/6 p-7">
+              <p className="text-base leading-8 text-white/76">
+                For partnership opportunities, research collaborations, and platform
+                inquiries, contact the VitaLumen Nexus team.
+              </p>
+              <button
+                type="button"
+                onClick={openContactDialog}
+                className="inline-flex items-center gap-2 text-left text-sm font-semibold uppercase tracking-[0.24em] text-white"
+              >
+                Start the conversation
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <footer className="px-5 pb-10 pt-4 md:px-8">
+          <div className="mx-auto flex max-w-7xl flex-col gap-6 border-t border-[color:var(--border)] py-8 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="font-display text-3xl tracking-[-0.05em] text-[color:var(--foreground)]">
+                VitaLumen Nexus
+              </p>
+              <p className="mt-2 text-sm leading-7 text-[color:var(--muted-foreground)]">
+                Building the infrastructure for the next generation of intelligent systems.
+              </p>
+            </div>
+            <p className="text-[11px] uppercase tracking-[0.32em] text-[color:var(--muted-foreground)]">
+              Intelligence • Innovation • Orchestration
             </p>
           </div>
+        </footer>
+      </main>
 
-          <div className="flex flex-col justify-between gap-8 rounded-[30px] border border-white/12 bg-white/6 p-7">
-            <p className="text-base leading-8 text-white/76">
-              For partnership opportunities, research collaborations, and platform
-              inquiries, contact the VitaLumen Nexus team.
-            </p>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Contact VitaLumen Nexus</DialogTitle>
+          <DialogDescription>
+            Choose how you want to start the conversation.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="mt-8 grid gap-4">
+          {contactOptions.map(({ title, description, href, label, icon: Icon }) => (
             <a
-              href="#"
-              className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.24em] text-white"
+              key={title}
+              href={href}
+              target={title === "WhatsApp" ? "_blank" : undefined}
+              rel={title === "WhatsApp" ? "noreferrer" : undefined}
+              className="rounded-[28px] border border-[color:var(--border)] bg-white/70 p-5 transition hover:-translate-y-0.5 hover:border-[color:var(--border-strong)] hover:bg-white"
             >
-              Start the conversation
-              <ChevronRight className="size-4" />
+              <div className="flex items-start gap-4">
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-[color:var(--border)] bg-[color:var(--secondary)] text-[color:var(--primary)]">
+                  <Icon className="size-5" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <p className="font-display text-2xl tracking-[-0.04em] text-[color:var(--foreground)]">
+                      {title}
+                    </p>
+                    <ChevronRight className="size-4 text-[color:var(--accent)]" />
+                  </div>
+                  <p className="text-sm leading-7 text-[color:var(--muted-foreground)]">
+                    {description}
+                  </p>
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--accent)]">
+                    {label}
+                  </p>
+                </div>
+              </div>
             </a>
-          </div>
+          ))}
         </div>
-      </section>
-
-      <footer className="px-5 pb-10 pt-4 md:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 border-t border-[color:var(--border)] py-8 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="font-display text-3xl tracking-[-0.05em] text-[color:var(--foreground)]">
-              VitaLumen Nexus
-            </p>
-            <p className="mt-2 text-sm leading-7 text-[color:var(--muted-foreground)]">
-              Building the infrastructure for the next generation of intelligent systems.
-            </p>
-          </div>
-          <p className="text-[11px] uppercase tracking-[0.32em] text-[color:var(--muted-foreground)]">
-            Intelligence • Innovation • Orchestration
-          </p>
-        </div>
-      </footer>
-    </main>
+      </DialogContent>
+    </Dialog>
   );
 }
