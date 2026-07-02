@@ -3,8 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "VitaLumen Nexus",
-  description:
-    "VitaLumen Nexus is the infrastructure for next-generation intelligence, innovation orchestration, and applied deep-tech discovery.",
+  description: "Next-generation intelligence and innovation orchestration.",
 };
 
 export default function RootLayout({

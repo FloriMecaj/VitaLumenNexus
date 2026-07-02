@@ -1,0 +1,85 @@
+import { defineQuery } from "next-sanity";
+
+export const siteSettingsQuery = defineQuery(`
+  *[_type == "siteSettings" && _id == "siteSettings"][0]{
+    seo,
+    brand,
+    navigation[]{
+      label,
+      href,
+      action
+    },
+    hero{
+      badge,
+      eyebrow,
+      title,
+      description,
+      supportingText,
+      primaryCtaLabel,
+      primaryCtaHref,
+      secondaryCtaLabel,
+      secondaryCtaHref,
+      storyBadge,
+      storyTitle,
+      storyDescription,
+      storyEyebrow,
+      storySummary,
+      storySupportingText,
+      storyIcon,
+      stats[]{
+        label,
+        value
+      }
+    },
+    platform,
+    architecture{
+      label,
+      title,
+      description,
+      modules[]{
+        title,
+        description,
+        icon
+      }
+    },
+    capabilities{
+      label,
+      title,
+      description,
+      "items": items[].value
+    },
+    aerospaceFeature,
+    methodology{
+      label,
+      title,
+      description,
+      steps[]{
+        number,
+        title
+      }
+    },
+    vision,
+    founder{
+      badge,
+      name,
+      role,
+      title,
+      "paragraphs": paragraphs[].value,
+      quoteLabel,
+      quote
+    },
+    contact,
+    contactDialog{
+      title,
+      description,
+      options[]{
+        title,
+        description,
+        href,
+        label,
+        icon,
+        openInNewTab
+      }
+    }
+  }
+`);
