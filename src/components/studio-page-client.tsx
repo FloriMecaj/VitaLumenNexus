@@ -14,10 +14,9 @@ export function StudioPageClient() {
             Sanity setup required
           </h1>
           <p className="text-base leading-8 text-[color:var(--muted-foreground)]">
-            Add `NEXT_PUBLIC_SANITY_PROJECT_ID` and
-            `NEXT_PUBLIC_SANITY_DATASET` to `client/.env.local`, then restart
-            the app. The rest of the setup steps are documented in
-            `client/README-SANITY.md`.
+            Add the public Sanity environment variables to your deployment if
+            you want to override the built-in project defaults, then redeploy
+            the app. Local development can keep using `client/.env.local`.
           </p>
         </div>
       </main>
