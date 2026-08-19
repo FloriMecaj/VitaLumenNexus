@@ -1,4 +1,4 @@
-import { defaultHomePageContent } from "./default-content";
+import { defaultHomePageContent } from "./default-content.ts";
 
 const withKeys = <T extends object>(items: T[], prefix: string) =>
   items.map((item, index) => ({
@@ -38,51 +38,84 @@ export function createSiteSettingsDocument() {
         "hero-stat",
       ),
     },
-    platform: {
-      _type: "platformSection",
-      ...content.platform,
-    },
-    architecture: {
-      _type: "architectureSection",
-      ...content.architecture,
-      modules: withKeys(
-        content.architecture.modules.map((item) => ({
-          _type: "moduleItem",
-          ...item,
-        })),
-        "module",
-      ),
-    },
-    capabilities: {
-      _type: "capabilitiesSection",
-      ...content.capabilities,
-      items: withKeys(
-        content.capabilities.items.map((item) => ({
-          _type: "stringValueItem",
-          value: item,
-        })),
-        "capability",
-      ),
-    },
-    aerospaceFeature: {
-      _type: "aerospaceFeature",
-      ...content.aerospaceFeature,
-    },
-    methodology: {
-      _type: "methodologySection",
-      ...content.methodology,
-      steps: withKeys(
-        content.methodology.steps.map((item) => ({
-          _type: "methodologyStep",
-          ...item,
-        })),
-        "step",
-      ),
-    },
-    vision: {
-      _type: "sectionIntro",
-      ...content.vision,
-    },
+    sections: withKeys(
+      content.sections.map((section, index) => {
+        if (section._type === "architectureSection") {
+          return {
+            ...section,
+            modules: withKeys(
+              section.modules.map((item) => ({
+                _type: "moduleItem",
+                ...item,
+              })),
+              `section-${index + 1}-module`,
+            ),
+          };
+        }
+
+        if (section._type === "capabilitiesSection") {
+          return {
+            ...section,
+            items: withKeys(
+              section.items.map((item) => ({
+                _type: "stringValueItem",
+                value: item,
+              })),
+              `section-${index + 1}-item`,
+            ),
+          };
+        }
+
+        if (section._type === "methodologySection") {
+          return {
+            ...section,
+            steps: withKeys(
+              section.steps.map((item) => ({
+                _type: "methodologyStep",
+                ...item,
+              })),
+              `section-${index + 1}-step`,
+            ),
+          };
+        }
+
+        if (section._type === "flexibleContentSection") {
+          return {
+            ...section,
+            body: withKeys(
+              section.body.map((paragraph) => ({
+                _type: "stringValueItem",
+                value: paragraph,
+              })),
+              `section-${index + 1}-body`,
+            ),
+            items: withKeys(
+              section.items.map((item) => ({
+                _type: "stringValueItem",
+                value: item,
+              })),
+              `section-${index + 1}-bullet`,
+            ),
+            cards: withKeys(
+              section.cards.map((card) => ({
+                _type: "contentCard",
+                ...card,
+              })),
+              `section-${index + 1}-card`,
+            ),
+            panel: section.panel
+              ? {
+                  _type: "featurePanel",
+                  ...section.panel,
+                }
+              : undefined,
+          };
+        }
+
+        return section;
+      }),
+      "section",
+    ),
     founder: {
       _type: "founderSection",
       ...content.founder,

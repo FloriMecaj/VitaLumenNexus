@@ -44,10 +44,93 @@ export type ContactOption = {
 };
 
 export type SectionIntroContent = {
-  label: string;
+  label?: string;
+  title: string;
+  description?: string;
+};
+
+export type ContentCard = {
+  title: string;
+  description: string;
+  icon?: IconName;
+};
+
+export type FeaturePanel = {
+  label?: string;
   title: string;
   description: string;
 };
+
+export type SectionAnchor = {
+  sectionId: string;
+};
+
+export type PlatformPageSection = SectionAnchor &
+  SectionIntroContent & {
+    _type: "platformSection";
+    missionLabel: string;
+    missionTitle: string;
+    missionDescription: string;
+  };
+
+export type ArchitecturePageSection = SectionAnchor &
+  SectionIntroContent & {
+    _type: "architectureSection";
+    modules: ModuleItem[];
+  };
+
+export type CapabilitiesPageSection = SectionAnchor &
+  SectionIntroContent & {
+    _type: "capabilitiesSection";
+    items: string[];
+  };
+
+export type AerospaceFeaturePageSection = SectionAnchor & {
+  _type: "aerospaceFeature";
+  badge: string;
+  title: string;
+  description: string;
+  objectiveLabel: string;
+  objective: string;
+};
+
+export type MethodologyPageSection = SectionAnchor &
+  SectionIntroContent & {
+    _type: "methodologySection";
+    steps: MethodologyStep[];
+  };
+
+export type VisionPageSection = SectionAnchor &
+  SectionIntroContent & {
+    _type: "sectionIntro";
+  };
+
+export type FlexibleSectionLayout =
+  | "copy"
+  | "copyWithPanel"
+  | "bulletList"
+  | "cardGrid";
+
+export type FlexibleContentSection = SectionAnchor & {
+  _type: "flexibleContentSection";
+  label?: string;
+  title: string;
+  description?: string;
+  layout: FlexibleSectionLayout;
+  body: string[];
+  items: string[];
+  cards: ContentCard[];
+  panel?: FeaturePanel;
+};
+
+export type PageSection =
+  | PlatformPageSection
+  | ArchitecturePageSection
+  | CapabilitiesPageSection
+  | AerospaceFeaturePageSection
+  | MethodologyPageSection
+  | VisionPageSection
+  | FlexibleContentSection;
 
 export type HomePageContent = {
   seo: {
@@ -79,28 +162,7 @@ export type HomePageContent = {
     storyIcon: IconName;
     stats: HeroStat[];
   };
-  platform: SectionIntroContent & {
-    missionLabel: string;
-    missionTitle: string;
-    missionDescription: string;
-  };
-  architecture: SectionIntroContent & {
-    modules: ModuleItem[];
-  };
-  capabilities: SectionIntroContent & {
-    items: string[];
-  };
-  aerospaceFeature: {
-    badge: string;
-    title: string;
-    description: string;
-    objectiveLabel: string;
-    objective: string;
-  };
-  methodology: SectionIntroContent & {
-    steps: MethodologyStep[];
-  };
-  vision: SectionIntroContent;
+  sections: PageSection[];
   founder: {
     badge: string;
     name: string;

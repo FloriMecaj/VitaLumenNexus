@@ -46,7 +46,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import type { HomePageContent, IconName } from "@/sanity/types";
+import type {
+  FlexibleContentSection,
+  HomePageContent,
+  IconName,
+  PageSection,
+} from "@/sanity/types";
 
 const iconMap: Record<IconName, LucideIcon> = {
   orbit: Orbit,
@@ -68,25 +73,358 @@ function SectionIntro({
   title,
   description,
 }: {
-  label: string;
+  label?: string;
   title: string;
-  description: string;
+  description?: string;
 }) {
   return (
     <div className="max-w-3xl space-y-5">
-      <Badge className="border-[color:var(--border-strong)] bg-white/70 text-[color:var(--primary)]">
-        {label}
-      </Badge>
+      {label ? (
+        <Badge className="border-[color:var(--border-strong)] bg-white/70 text-[color:var(--primary)]">
+          {label}
+        </Badge>
+      ) : null}
       <div className="space-y-4">
         <h2 className="font-display text-4xl leading-tight tracking-[-0.05em] text-[color:var(--foreground)] md:text-6xl">
           {title}
         </h2>
-        <p className="text-base leading-8 text-[color:var(--muted-foreground)] md:text-lg">
-          {description}
-        </p>
+        {description ? (
+          <p className="text-base leading-8 text-[color:var(--muted-foreground)] md:text-lg">
+            {description}
+          </p>
+        ) : null}
       </div>
     </div>
   );
+}
+
+function renderFlexibleSection(section: FlexibleContentSection) {
+  const intro = (
+    <SectionIntro
+      label={section.label}
+      title={section.title}
+      description={section.description}
+    />
+  );
+
+  const body =
+    section.body.length > 0 ? (
+      <div className="space-y-5 text-base leading-8 text-[color:var(--muted-foreground)]">
+        {section.body.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
+      </div>
+    ) : null;
+
+  const panel =
+    section.panel ? (
+      <Card className="story-card rounded-[34px]">
+        <CardContent className="space-y-6 p-8 md:p-10">
+          {section.panel.label ? (
+            <p className="text-sm font-semibold uppercase tracking-[0.26em] text-[color:var(--accent)]">
+              {section.panel.label}
+            </p>
+          ) : null}
+          <p className="font-display text-3xl leading-tight tracking-[-0.045em] text-[color:var(--foreground)] md:text-4xl">
+            {section.panel.title}
+          </p>
+          <p className="text-base leading-8 text-[color:var(--muted-foreground)]">
+            {section.panel.description}
+          </p>
+        </CardContent>
+      </Card>
+    ) : null;
+
+  if (section.layout === "copyWithPanel") {
+    return (
+      <section
+        id={section.sectionId}
+        className="section-shell px-5 py-20 md:px-8 md:py-28"
+      >
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
+          <div className="space-y-6">
+            {intro}
+            {body}
+          </div>
+          {panel}
+        </div>
+      </section>
+    );
+  }
+
+  if (section.layout === "bulletList") {
+    return (
+      <section
+        id={section.sectionId}
+        className="section-shell px-5 py-20 md:px-8 md:py-28"
+      >
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="space-y-6">
+            {intro}
+            {body}
+          </div>
+          <div className="space-y-4">
+            {section.items.map((item, index) => (
+              <Card key={item} className="story-card rounded-[30px]">
+                <CardContent className="flex gap-5 p-6 md:items-center md:p-7">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-[color:var(--primary-foreground)]">
+                    {index + 1}
+                  </div>
+                  <p className="text-base leading-8 text-[color:var(--foreground)]">
+                    {item}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (section.layout === "cardGrid") {
+    return (
+      <section
+        id={section.sectionId}
+        className="section-shell px-5 py-20 md:px-8 md:py-28"
+      >
+        <div className="mx-auto max-w-7xl space-y-12">
+          <div className="space-y-6">
+            {intro}
+            {body}
+          </div>
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {section.cards.map((card) => {
+              const Icon = card.icon ? iconMap[card.icon] : null;
+
+              return (
+                <Card
+                  key={card.title}
+                  className="section-tint rounded-[30px] bg-white/55 transition duration-300 hover:-translate-y-1 hover:border-[color:var(--border-strong)]"
+                >
+                  <CardHeader className="space-y-5 p-7">
+                    {Icon ? (
+                      <div className="flex size-12 items-center justify-center rounded-2xl border border-[color:var(--border)] bg-white text-[color:var(--primary)]">
+                        <Icon className="size-5" />
+                      </div>
+                    ) : null}
+                    <CardTitle className="text-xl text-[color:var(--foreground)]">
+                      {card.title}
+                    </CardTitle>
+                    <CardDescription>{card.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      id={section.sectionId}
+      className="section-shell px-5 py-20 md:px-8 md:py-28"
+    >
+      <div className="mx-auto max-w-7xl rounded-[40px] border border-[color:var(--border)] bg-white/50 px-7 py-10 md:px-12 md:py-14">
+        <div className="space-y-6">
+          {intro}
+          {body}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function renderPageSection(section: PageSection) {
+  switch (section._type) {
+    case "platformSection":
+      return (
+        <section
+          key={section.sectionId}
+          id={section.sectionId}
+          className="section-shell px-5 py-20 md:px-8 md:py-28"
+        >
+          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
+            <SectionIntro
+              label={section.label}
+              title={section.title}
+              description={section.description}
+            />
+
+            <Card className="story-card rounded-[34px]">
+              <CardContent className="space-y-6 p-8 md:p-10">
+                <p className="text-sm font-semibold uppercase tracking-[0.26em] text-[color:var(--accent)]">
+                  {section.missionLabel}
+                </p>
+                <p className="font-display text-3xl leading-tight tracking-[-0.045em] text-[color:var(--foreground)] md:text-4xl">
+                  {section.missionTitle}
+                </p>
+                <p className="text-base leading-8 text-[color:var(--muted-foreground)]">
+                  {section.missionDescription}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      );
+    case "architectureSection":
+      return (
+        <section
+          key={section.sectionId}
+          id={section.sectionId}
+          className="section-shell px-5 py-20 md:px-8 md:py-28"
+        >
+          <div className="mx-auto max-w-7xl space-y-12">
+            <SectionIntro
+              label={section.label}
+              title={section.title}
+              description={section.description}
+            />
+
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {section.modules.map((module) => {
+                const Icon = iconMap[module.icon];
+
+                return (
+                  <Card
+                    key={module.title}
+                    className="section-tint rounded-[30px] bg-white/55 transition duration-300 hover:-translate-y-1 hover:border-[color:var(--border-strong)]"
+                  >
+                    <CardHeader className="space-y-5 p-7">
+                      <div className="flex size-12 items-center justify-center rounded-2xl border border-[color:var(--border)] bg-white text-[color:var(--primary)]">
+                        <Icon className="size-5" />
+                      </div>
+                      <CardTitle className="text-xl text-[color:var(--foreground)]">
+                        {module.title}
+                      </CardTitle>
+                      <CardDescription>{module.description}</CardDescription>
+                    </CardHeader>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    case "capabilitiesSection":
+      return (
+        <section
+          key={section.sectionId}
+          id={section.sectionId}
+          className="section-shell px-5 py-20 md:px-8 md:py-28"
+        >
+          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+            <SectionIntro
+              label={section.label}
+              title={section.title}
+              description={section.description}
+            />
+
+            <div className="space-y-4">
+              {section.items.map((capability, index) => (
+                <Card key={capability} className="story-card rounded-[30px]">
+                  <CardContent className="flex gap-5 p-6 md:items-center md:p-7">
+                    <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-[color:var(--primary-foreground)]">
+                      {index + 1}
+                    </div>
+                    <p className="text-base leading-8 text-[color:var(--foreground)]">
+                      {capability}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    case "aerospaceFeature":
+      return (
+        <section
+          key={section.sectionId}
+          id={section.sectionId}
+          className="section-shell px-5 py-20 md:px-8 md:py-28"
+        >
+          <div className="mx-auto max-w-7xl">
+            <Card className="rounded-[38px] border-[color:var(--border-strong)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
+              <CardContent className="grid gap-8 p-8 md:grid-cols-[1.1fr_0.9fr] md:p-12">
+                <div className="space-y-5">
+                  <Badge className="w-fit border-white/20 bg-white/10 text-white">
+                    {section.badge}
+                  </Badge>
+                  <h2 className="font-display text-4xl leading-tight tracking-[-0.05em] md:text-5xl">
+                    {section.title}
+                  </h2>
+                  <p className="max-w-2xl text-base leading-8 text-white/78">
+                    {section.description}
+                  </p>
+                </div>
+                <div className="rounded-[30px] border border-white/15 bg-white/8 p-7">
+                  <p className="text-sm font-semibold uppercase tracking-[0.26em] text-white/68">
+                    {section.objectiveLabel}
+                  </p>
+                  <p className="mt-4 font-display text-3xl leading-tight tracking-[-0.05em]">
+                    {section.objective}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      );
+    case "methodologySection":
+      return (
+        <section
+          key={section.sectionId}
+          id={section.sectionId}
+          className="section-shell px-5 py-20 md:px-8 md:py-28"
+        >
+          <div className="mx-auto max-w-7xl space-y-12">
+            <SectionIntro
+              label={section.label}
+              title={section.title}
+              description={section.description}
+            />
+
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {section.steps.map((step) => (
+                <Card key={step.number} className="story-card rounded-[30px]">
+                  <CardContent className="space-y-10 p-7">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[color:var(--accent)]">
+                      {step.number}
+                    </span>
+                    <p className="font-display text-3xl leading-tight tracking-[-0.05em] text-[color:var(--foreground)]">
+                      {step.title}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    case "sectionIntro":
+      return (
+        <section
+          key={section.sectionId}
+          id={section.sectionId}
+          className="section-shell px-5 py-20 md:px-8 md:py-28"
+        >
+          <div className="mx-auto max-w-7xl rounded-[40px] border border-[color:var(--border)] bg-white/50 px-7 py-10 md:px-12 md:py-14">
+            <SectionIntro
+              label={section.label}
+              title={section.title}
+              description={section.description}
+            />
+          </div>
+        </section>
+      );
+    case "flexibleContentSection":
+      return <div key={section.sectionId}>{renderFlexibleSection(section)}</div>;
+    default:
+      return null;
+  }
 }
 
 export function HomePage({ content }: { content: HomePageContent }) {
@@ -99,6 +437,7 @@ export function HomePage({ content }: { content: HomePageContent }) {
   };
 
   const StoryIcon = iconMap[content.hero.storyIcon];
+  const navigation = content.navigation.slice(0, 4);
 
   return (
     <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
@@ -115,7 +454,7 @@ export function HomePage({ content }: { content: HomePageContent }) {
             </a>
 
             <nav className="hidden items-center gap-8 md:flex">
-              {content.navigation.map((item) =>
+              {navigation.map((item) =>
                 item.action === "contactDialog" ? (
                   <button
                     key={`${item.label}-${item.href}`}
@@ -168,7 +507,7 @@ export function HomePage({ content }: { content: HomePageContent }) {
                 </SheetHeader>
 
                 <nav className="flex flex-1 flex-col gap-2 p-5">
-                  {content.navigation.map((item) =>
+                  {navigation.map((item) =>
                     item.action === "contactDialog" ? (
                       <button
                         key={`${item.label}-${item.href}`}
@@ -296,159 +635,7 @@ export function HomePage({ content }: { content: HomePageContent }) {
           </div>
         </section>
 
-        <section
-          id="platform"
-          className="section-shell px-5 py-20 md:px-8 md:py-28"
-        >
-          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
-            <SectionIntro
-              label={content.platform.label}
-              title={content.platform.title}
-              description={content.platform.description}
-            />
-
-            <Card className="story-card rounded-[34px]">
-              <CardContent className="space-y-6 p-8 md:p-10">
-                <p className="text-sm font-semibold uppercase tracking-[0.26em] text-[color:var(--accent)]">
-                  {content.platform.missionLabel}
-                </p>
-                <p className="font-display text-3xl leading-tight tracking-[-0.045em] text-[color:var(--foreground)] md:text-4xl">
-                  {content.platform.missionTitle}
-                </p>
-                <p className="text-base leading-8 text-[color:var(--muted-foreground)]">
-                  {content.platform.missionDescription}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        <section
-          id="architecture"
-          className="section-shell px-5 py-20 md:px-8 md:py-28"
-        >
-          <div className="mx-auto max-w-7xl space-y-12">
-            <SectionIntro
-              label={content.architecture.label}
-              title={content.architecture.title}
-              description={content.architecture.description}
-            />
-
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {content.architecture.modules.map((module) => {
-                const Icon = iconMap[module.icon];
-
-                return (
-                  <Card
-                    key={module.title}
-                    className="section-tint rounded-[30px] bg-white/55 transition duration-300 hover:-translate-y-1 hover:border-[color:var(--border-strong)]"
-                  >
-                    <CardHeader className="space-y-5 p-7">
-                      <div className="flex size-12 items-center justify-center rounded-2xl border border-[color:var(--border)] bg-white text-[color:var(--primary)]">
-                        <Icon className="size-5" />
-                      </div>
-                      <CardTitle className="text-xl text-[color:var(--foreground)]">
-                        {module.title}
-                      </CardTitle>
-                      <CardDescription>{module.description}</CardDescription>
-                    </CardHeader>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="capabilities"
-          className="section-shell px-5 py-20 md:px-8 md:py-28"
-        >
-          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.95fr_1.05fr]">
-            <SectionIntro
-              label={content.capabilities.label}
-              title={content.capabilities.title}
-              description={content.capabilities.description}
-            />
-
-            <div className="space-y-4">
-              {content.capabilities.items.map((capability, index) => (
-                <Card key={capability} className="story-card rounded-[30px]">
-                  <CardContent className="flex gap-5 p-6 md:items-center md:p-7">
-                    <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-semibold text-[color:var(--primary-foreground)]">
-                      {index + 1}
-                    </div>
-                    <p className="text-base leading-8 text-[color:var(--foreground)]">
-                      {capability}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="section-shell px-5 py-20 md:px-8 md:py-28">
-          <div className="mx-auto max-w-7xl">
-            <Card className="rounded-[38px] border-[color:var(--border-strong)] bg-[color:var(--primary)] text-[color:var(--primary-foreground)]">
-              <CardContent className="grid gap-8 p-8 md:grid-cols-[1.1fr_0.9fr] md:p-12">
-                <div className="space-y-5">
-                  <Badge className="w-fit border-white/20 bg-white/10 text-white">
-                    {content.aerospaceFeature.badge}
-                  </Badge>
-                  <h2 className="font-display text-4xl leading-tight tracking-[-0.05em] md:text-5xl">
-                    {content.aerospaceFeature.title}
-                  </h2>
-                  <p className="max-w-2xl text-base leading-8 text-white/78">
-                    {content.aerospaceFeature.description}
-                  </p>
-                </div>
-                <div className="rounded-[30px] border border-white/15 bg-white/8 p-7">
-                  <p className="text-sm font-semibold uppercase tracking-[0.26em] text-white/68">
-                    {content.aerospaceFeature.objectiveLabel}
-                  </p>
-                  <p className="mt-4 font-display text-3xl leading-tight tracking-[-0.05em]">
-                    {content.aerospaceFeature.objective}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        <section className="section-shell px-5 py-20 md:px-8 md:py-28">
-          <div className="mx-auto max-w-7xl space-y-12">
-            <SectionIntro
-              label={content.methodology.label}
-              title={content.methodology.title}
-              description={content.methodology.description}
-            />
-
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {content.methodology.steps.map((step) => (
-                <Card key={step.number} className="story-card rounded-[30px]">
-                  <CardContent className="space-y-10 p-7">
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[color:var(--accent)]">
-                      {step.number}
-                    </span>
-                    <p className="font-display text-3xl leading-tight tracking-[-0.05em] text-[color:var(--foreground)]">
-                      {step.title}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="section-shell px-5 py-20 md:px-8 md:py-28">
-          <div className="mx-auto max-w-7xl rounded-[40px] border border-[color:var(--border)] bg-white/50 px-7 py-10 md:px-12 md:py-14">
-            <SectionIntro
-              label={content.vision.label}
-              title={content.vision.title}
-              description={content.vision.description}
-            />
-          </div>
-        </section>
+        {content.sections.map((section) => renderPageSection(section))}
 
         <section
           id="founder"

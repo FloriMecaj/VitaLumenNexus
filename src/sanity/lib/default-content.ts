@@ -1,4 +1,4 @@
-import type { HomePageContent } from "../types";
+import type { HomePageContent } from "../types.ts";
 
 export const defaultHomePageContent: HomePageContent = {
   seo: {
@@ -17,7 +17,6 @@ export const defaultHomePageContent: HomePageContent = {
     { label: "Architecture", href: "#architecture", action: "scroll" },
     { label: "Capabilities", href: "#capabilities", action: "scroll" },
     { label: "Founder", href: "#founder", action: "scroll" },
-    { label: "Contact", href: "#contact", action: "contactDialog" },
   ],
   hero: {
     badge: "Presenting Website",
@@ -48,125 +47,140 @@ export const defaultHomePageContent: HomePageContent = {
       { label: "Direction", value: "Multi-Domain" },
     ],
   },
-  platform: {
-    label: "About The Platform",
-    title: "What is VitaLumen Nexus?",
-    description:
-      "VitaLumen Nexus is a modular intelligence ecosystem that combines strategic thinking, technology generation, system orchestration, and real-world validation into a single framework.",
-    missionLabel: "Mission",
-    missionTitle:
-      "To provide a structured environment where intelligence, innovation, and execution work together.",
-    missionDescription:
-      "Rather than focusing on one industry, the platform is designed to support multiple domains, including advanced technology, aerospace, intelligent systems, healthcare innovation, and future-oriented research.",
-  },
-  architecture: {
-    label: "Platform Architecture",
-    title:
-      "A unified intelligence framework built around connected modules.",
-    description:
-      "Each module is responsible for a distinct layer of intelligence and innovation. Together they create a coordinated system capable of discovering opportunities, generating solutions, validating outcomes, and continuously improving performance.",
-    modules: [
-      {
-        title: "Meta Platform Layer",
-        description:
-          "The strategic layer that aligns every module inside a coherent innovation framework.",
-        icon: "orbit",
-      },
-      {
-        title: "Genesis Core",
-        description:
-          "The origin point for concept generation, directional thinking, and early future scenarios.",
-        icon: "sparkles",
-      },
-      {
-        title: "Orchestrator Core",
-        description:
-          "The coordinating center for workflows, systems, and intelligence operations.",
-        icon: "workflow",
-      },
-      {
-        title: "AIDL",
-        description:
-          "A structured layer for applied intelligence development and system reasoning.",
-        icon: "bot",
-      },
-      {
-        title: "Technology Creation Engine",
-        description:
-          "A dedicated capability for generating concepts, architectures, and technology structures.",
-        icon: "cpu",
-      },
-      {
-        title: "Technology Discovery Engine",
-        description:
-          "A signal-seeking layer for emerging opportunities, hidden patterns, and innovation gaps.",
-        icon: "radar",
-      },
-      {
-        title: "Civilization Core",
-        description:
-          "A long-range systems perspective for future structures, societal change, and macro evolution.",
-        icon: "compass",
-      },
-      {
-        title: "Reality Core",
-        description:
-          "The validation layer that connects ideas to measurable outcomes and feedback loops.",
-        icon: "shieldCheck",
-      },
-      {
-        title: "Innovation Meta Core",
-        description:
-          "The synthesis layer where strategy, intelligence, and execution become continuous innovation.",
-        icon: "binary",
-      },
-      {
-        title: "Aerospace Core",
-        description:
-          "The engineering-focused research module for propulsion, analysis, and aerospace exploration.",
-        icon: "rocket",
-      },
-    ],
-  },
-  capabilities: {
-    label: "Core Capabilities",
-    title: "What the platform enables.",
-    description:
-      "VitaLumen Nexus is built to move from exploration to execution through a coordinated innovation cycle.",
-    items: [
-      "Generate new concepts, architectures, and technology frameworks.",
-      "Identify emerging trends, hidden opportunities, and innovation gaps.",
-      "Coordinate multiple intelligent processes within a unified environment.",
-      "Connect ideas with measurable outcomes and real-world feedback.",
-      "Support long-term innovation through adaptive learning and strategic intelligence.",
-    ],
-  },
-  aerospaceFeature: {
-    badge: "Aerospace Core",
-    title: "Applied deep-tech intelligence with an engineering-focused research layer.",
-    description:
-      "Designed to support conceptual analysis, propulsion modeling, system evaluation, and advanced aerospace exploration through structured intelligence workflows.",
-    objectiveLabel: "Objective",
-    objective: "Bridge visionary ideas and practical engineering thinking.",
-  },
-  methodology: {
-    label: "Our Approach",
-    title: "From discovery to innovation.",
-    description:
-      "The VitaLumen Nexus methodology follows a self-reinforcing cycle that creates continuity between insight, generation, validation, and progress.",
-    steps: [
-      { number: "01", title: "Discover opportunities." },
-      { number: "02", title: "Create solutions." },
-      { number: "03", title: "Validate outcomes." },
-      { number: "04", title: "Continuously improve." },
-    ],
-  },
-  vision: {
-    label: "Vision",
-    title: "Building the future of intelligent systems.",
-    description:
-      "We believe the future belongs to systems that can discover, create, adapt, and evolve. VitaLumen Nexus is designed as a foundation for that future: a platform where intelligence becomes structured, scalable, and actionable.",
-  },
+  sections: [
+    {
+      _type: "platformSection",
+      sectionId: "platform",
+      label: "About The Platform",
+      title: "What is VitaLumen Nexus?",
+      description:
+        "VitaLumen Nexus is a modular intelligence ecosystem that combines strategic thinking, technology generation, system orchestration, and real-world validation into a single framework.",
+      missionLabel: "Mission",
+      missionTitle:
+        "To provide a structured environment where intelligence, innovation, and execution work together.",
+      missionDescription:
+        "Rather than focusing on one industry, the platform is designed to support multiple domains, including advanced technology, aerospace, intelligent systems, healthcare innovation, and future-oriented research.",
+    },
+    {
+      _type: "architectureSection",
+      sectionId: "architecture",
+      label: "Platform Architecture",
+      title:
+        "A unified intelligence framework built around connected modules.",
+      description:
+        "Each module is responsible for a distinct layer of intelligence and innovation. Together they create a coordinated system capable of discovering opportunities, generating solutions, validating outcomes, and continuously improving performance.",
+      modules: [
+        {
+          title: "Meta Platform Layer",
+          description:
+            "The strategic layer that aligns every module inside a coherent innovation framework.",
+          icon: "orbit",
+        },
+        {
+          title: "Genesis Core",
+          description:
+            "The origin point for concept generation, directional thinking, and early future scenarios.",
+          icon: "sparkles",
+        },
+        {
+          title: "Orchestrator Core",
+          description:
+            "The coordinating center for workflows, systems, and intelligence operations.",
+          icon: "workflow",
+        },
+        {
+          title: "AIDL",
+          description:
+            "A structured layer for applied intelligence development and system reasoning.",
+          icon: "bot",
+        },
+        {
+          title: "Technology Creation Engine",
+          description:
+            "A dedicated capability for generating concepts, architectures, and technology structures.",
+          icon: "cpu",
+        },
+        {
+          title: "Technology Discovery Engine",
+          description:
+            "A signal-seeking layer for emerging opportunities, hidden patterns, and innovation gaps.",
+          icon: "radar",
+        },
+        {
+          title: "Civilization Core",
+          description:
+            "A long-range systems perspective for future structures, societal change, and macro evolution.",
+          icon: "compass",
+        },
+        {
+          title: "Reality Core",
+          description:
+            "The validation layer that connects ideas to measurable outcomes and feedback loops.",
+          icon: "shieldCheck",
+        },
+        {
+          title: "Innovation Meta Core",
+          description:
+            "The synthesis layer where strategy, intelligence, and execution become continuous innovation.",
+          icon: "binary",
+        },
+        {
+          title: "Aerospace Core",
+          description:
+            "The engineering-focused research module for propulsion, analysis, and aerospace exploration.",
+          icon: "rocket",
+        },
+      ],
+    },
+    {
+      _type: "capabilitiesSection",
+      sectionId: "capabilities",
+      label: "Core Capabilities",
+      title: "What the platform enables.",
+      description:
+        "VitaLumen Nexus is built to move from exploration to execution through a coordinated innovation cycle.",
+      items: [
+        "Generate new concepts, architectures, and technology frameworks.",
+        "Identify emerging trends, hidden opportunities, and innovation gaps.",
+        "Coordinate multiple intelligent processes within a unified environment.",
+        "Connect ideas with measurable outcomes and real-world feedback.",
+        "Support long-term innovation through adaptive learning and strategic intelligence.",
+      ],
+    },
+    {
+      _type: "aerospaceFeature",
+      sectionId: "aerospace-core",
+      badge: "Aerospace Core",
+      title:
+        "Applied deep-tech intelligence with an engineering-focused research layer.",
+      description:
+        "Designed to support conceptual analysis, propulsion modeling, system evaluation, and advanced aerospace exploration through structured intelligence workflows.",
+      objectiveLabel: "Objective",
+      objective: "Bridge visionary ideas and practical engineering thinking.",
+    },
+    {
+      _type: "methodologySection",
+      sectionId: "methodology",
+      label: "Our Approach",
+      title: "From discovery to innovation.",
+      description:
+        "The VitaLumen Nexus methodology follows a self-reinforcing cycle that creates continuity between insight, generation, validation, and progress.",
+      steps: [
+        { number: "01", title: "Discover opportunities." },
+        { number: "02", title: "Create solutions." },
+        { number: "03", title: "Validate outcomes." },
+        { number: "04", title: "Continuously improve." },
+      ],
+    },
+    {
+      _type: "sectionIntro",
+      sectionId: "vision",
+      label: "Vision",
+      title: "Building the future of intelligent systems.",
+      description:
+        "We believe the future belongs to systems that can discover, create, adapt, and evolve. VitaLumen Nexus is designed as a foundation for that future: a platform where intelligence becomes structured, scalable, and actionable.",
+    },
+  ],
   founder: {
     badge: "Themeluesi",
     name: "Pullumb Vathi",

@@ -1,7 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
-import { createSiteSettingsDocument } from "../lib/site-settings-document";
 import { iconOptions } from "../lib/icon-options";
+import { createSiteSettingsDocument } from "../lib/site-settings-document";
 
 const iconField = defineField({
   name: "icon",
@@ -11,8 +11,41 @@ const iconField = defineField({
     list: iconOptions,
     layout: "dropdown",
   },
-  validation: (Rule) => Rule.required(),
 });
+
+const sectionAnchorFields = [
+  defineField({
+    name: "sectionId",
+    title: "Section ID",
+    type: "string",
+    description:
+      "Used for the website anchor link, for example 'platform' becomes '#platform'.",
+    validation: (Rule) =>
+      Rule.required()
+        .regex(/^[a-z0-9-]+$/)
+        .error("Use lowercase letters, numbers, and hyphens only."),
+  }),
+];
+
+const sectionIntroFields = [
+  defineField({
+    name: "label",
+    title: "Label",
+    type: "string",
+  }),
+  defineField({
+    name: "title",
+    title: "Title",
+    type: "string",
+    validation: (Rule) => Rule.required(),
+  }),
+  defineField({
+    name: "description",
+    title: "Description",
+    type: "text",
+    rows: 4,
+  }),
+];
 
 const navigationItem = defineType({
   name: "navigationItem",
@@ -102,7 +135,10 @@ const moduleItem = defineType({
       rows: 3,
       validation: (Rule) => Rule.required(),
     }),
-    iconField,
+    defineField({
+      ...iconField,
+      validation: (Rule) => Rule.required(),
+    }),
   ],
 });
 
@@ -168,117 +204,15 @@ const contactOption = defineType({
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
-    iconField,
+    defineField({
+      ...iconField,
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: "openInNewTab",
       title: "Open in New Tab",
       type: "boolean",
       initialValue: false,
-    }),
-  ],
-});
-
-const sectionIntro = defineType({
-  name: "sectionIntro",
-  title: "Section Intro",
-  type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
-  preview: {
-    select: {
-      title: "title",
-      subtitle: "label",
-    },
-  },
-  fields: [
-    defineField({
-      name: "label",
-      title: "Label",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "title",
-      title: "Title",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "description",
-      title: "Description",
-      type: "text",
-      rows: 4,
-      validation: (Rule) => Rule.required(),
-    }),
-  ],
-});
-
-const seo = defineType({
-  name: "seo",
-  title: "SEO",
-  type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
-  preview: {
-    select: {
-      title: "title",
-      subtitle: "description",
-    },
-  },
-  fields: [
-    defineField({
-      name: "title",
-      title: "Page Title",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "description",
-      title: "Meta Description",
-      type: "text",
-      rows: 3,
-      validation: (Rule) => Rule.required(),
-    }),
-  ],
-});
-
-const brand = defineType({
-  name: "brand",
-  title: "Brand",
-  type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
-  preview: {
-    select: {
-      title: "siteTitle",
-      subtitle: "tagline",
-    },
-  },
-  fields: [
-    defineField({
-      name: "siteTitle",
-      title: "Site Title",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "tagline",
-      title: "Tagline",
-      type: "string",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "footerBlurb",
-      title: "Footer Blurb",
-      type: "text",
-      rows: 3,
-      validation: (Rule) => Rule.required(),
     }),
   ],
 });
@@ -311,14 +245,130 @@ const stringValueItem = defineType({
   ],
 });
 
+const contentCard = defineType({
+  name: "contentCard",
+  title: "Content Card",
+  type: "object",
+  preview: {
+    select: {
+      title: "title",
+      subtitle: "description",
+    },
+  },
+  fields: [
+    defineField({
+      name: "title",
+      title: "Title",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "description",
+      title: "Description",
+      type: "text",
+      rows: 3,
+      validation: (Rule) => Rule.required(),
+    }),
+    iconField,
+  ],
+});
+
+const featurePanel = defineType({
+  name: "featurePanel",
+  title: "Feature Panel",
+  type: "object",
+  preview: {
+    select: {
+      title: "title",
+      subtitle: "label",
+    },
+  },
+  fields: [
+    defineField({
+      name: "label",
+      title: "Label",
+      type: "string",
+    }),
+    defineField({
+      name: "title",
+      title: "Title",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "description",
+      title: "Description",
+      type: "text",
+      rows: 4,
+      validation: (Rule) => Rule.required(),
+    }),
+  ],
+});
+
+const seo = defineType({
+  name: "seo",
+  title: "SEO",
+  type: "object",
+  preview: {
+    select: {
+      title: "title",
+      subtitle: "description",
+    },
+  },
+  fields: [
+    defineField({
+      name: "title",
+      title: "Page Title",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "description",
+      title: "Meta Description",
+      type: "text",
+      rows: 3,
+      validation: (Rule) => Rule.required(),
+    }),
+  ],
+});
+
+const brand = defineType({
+  name: "brand",
+  title: "Brand",
+  type: "object",
+  preview: {
+    select: {
+      title: "siteTitle",
+      subtitle: "tagline",
+    },
+  },
+  fields: [
+    defineField({
+      name: "siteTitle",
+      title: "Site Title",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "tagline",
+      title: "Tagline",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "footerBlurb",
+      title: "Footer Blurb",
+      type: "text",
+      rows: 3,
+      validation: (Rule) => Rule.required(),
+    }),
+  ],
+});
+
 const heroSection = defineType({
   name: "heroSection",
   title: "Hero",
   type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
   fieldsets: [
     { name: "intro", title: "Intro Copy", options: { columns: 2 } },
     { name: "cta", title: "Calls To Action", options: { columns: 2 } },
@@ -349,6 +399,7 @@ const heroSection = defineType({
       title: "Title",
       type: "string",
       fieldset: "intro",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "description",
@@ -432,6 +483,7 @@ const heroSection = defineType({
       name: "storyIcon",
       title: "Story Card Icon",
       fieldset: "story",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "stats",
@@ -447,18 +499,15 @@ const platformSection = defineType({
   name: "platformSection",
   title: "Platform Section",
   type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
   preview: {
     select: {
       title: "title",
-      subtitle: "missionTitle",
+      subtitle: "sectionId",
     },
   },
   fields: [
-    ...sectionIntro.fields,
+    ...sectionAnchorFields,
+    ...sectionIntroFields,
     defineField({
       name: "missionLabel",
       title: "Mission Label",
@@ -483,18 +532,15 @@ const architectureSection = defineType({
   name: "architectureSection",
   title: "Architecture Section",
   type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
   preview: {
     select: {
       title: "title",
-      subtitle: "label",
+      subtitle: "sectionId",
     },
   },
   fields: [
-    ...sectionIntro.fields,
+    ...sectionAnchorFields,
+    ...sectionIntroFields,
     defineField({
       name: "modules",
       title: "Modules",
@@ -508,18 +554,15 @@ const capabilitiesSection = defineType({
   name: "capabilitiesSection",
   title: "Capabilities Section",
   type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
   preview: {
     select: {
       title: "title",
-      subtitle: "label",
+      subtitle: "sectionId",
     },
   },
   fields: [
-    ...sectionIntro.fields,
+    ...sectionAnchorFields,
+    ...sectionIntroFields,
     defineField({
       name: "items",
       title: "Capabilities",
@@ -531,21 +574,24 @@ const capabilitiesSection = defineType({
 
 const aerospaceFeature = defineType({
   name: "aerospaceFeature",
-  title: "Aerospace Feature",
+  title: "Feature Highlight",
   type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
   preview: {
     select: {
       title: "title",
-      subtitle: "objective",
+      subtitle: "sectionId",
     },
   },
   fields: [
+    ...sectionAnchorFields,
     defineField({ name: "badge", title: "Badge", type: "string" }),
-    defineField({ name: "title", title: "Title", type: "text", rows: 3 }),
+    defineField({
+      name: "title",
+      title: "Title",
+      type: "text",
+      rows: 3,
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: "description",
       title: "Description",
@@ -570,18 +616,15 @@ const methodologySection = defineType({
   name: "methodologySection",
   title: "Methodology Section",
   type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
   preview: {
     select: {
       title: "title",
-      subtitle: "label",
+      subtitle: "sectionId",
     },
   },
   fields: [
-    ...sectionIntro.fields,
+    ...sectionAnchorFields,
+    ...sectionIntroFields,
     defineField({
       name: "steps",
       title: "Steps",
@@ -591,14 +634,222 @@ const methodologySection = defineType({
   ],
 });
 
+const sectionIntro = defineType({
+  name: "sectionIntro",
+  title: "Intro Section",
+  type: "object",
+  preview: {
+    select: {
+      title: "title",
+      subtitle: "sectionId",
+    },
+  },
+  fields: [...sectionAnchorFields, ...sectionIntroFields],
+});
+
+const flexibleContentSection = defineType({
+  name: "flexibleContentSection",
+  title: "Flexible Section",
+  type: "object",
+  fieldsets: [
+    { name: "copy", title: "Section Copy" },
+    { name: "support", title: "Supporting Content" },
+  ],
+  preview: {
+    select: {
+      title: "title",
+      subtitle: "sectionId",
+      layout: "layout",
+    },
+    prepare(selection) {
+      return {
+        title: selection.title || "Flexible Section",
+        subtitle: `${selection.subtitle || "no-id"} • ${selection.layout || "copy"}`,
+      };
+    },
+  },
+  fields: [
+    ...sectionAnchorFields,
+    defineField({
+      name: "label",
+      title: "Label",
+      type: "string",
+      fieldset: "copy",
+    }),
+    defineField({
+      name: "title",
+      title: "Title",
+      type: "string",
+      fieldset: "copy",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "description",
+      title: "Description",
+      type: "text",
+      rows: 4,
+      fieldset: "copy",
+    }),
+    defineField({
+      name: "layout",
+      title: "Layout",
+      type: "string",
+      initialValue: "copy",
+      options: {
+        list: [
+          { title: "Copy", value: "copy" },
+          { title: "Copy With Panel", value: "copyWithPanel" },
+          { title: "Bullet List", value: "bulletList" },
+          { title: "Card Grid", value: "cardGrid" },
+        ],
+        layout: "radio",
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "body",
+      title: "Body Paragraphs",
+      type: "array",
+      of: [defineArrayMember({ type: "stringValueItem" })],
+      fieldset: "support",
+    }),
+    defineField({
+      name: "items",
+      title: "Bullet Items",
+      type: "array",
+      of: [defineArrayMember({ type: "stringValueItem" })],
+      fieldset: "support",
+    }),
+    defineField({
+      name: "cards",
+      title: "Cards",
+      type: "array",
+      of: [defineArrayMember({ type: "contentCard" })],
+      fieldset: "support",
+    }),
+    defineField({
+      name: "panel",
+      title: "Feature Panel",
+      type: "featurePanel",
+      fieldset: "support",
+    }),
+  ],
+});
+
+const legacyPlatformSection = defineType({
+  name: "legacyPlatformSection",
+  title: "Legacy Platform Section",
+  type: "object",
+  fields: [
+    ...sectionIntroFields,
+    defineField({
+      name: "missionLabel",
+      title: "Mission Label",
+      type: "string",
+    }),
+    defineField({
+      name: "missionTitle",
+      title: "Mission Title",
+      type: "text",
+      rows: 3,
+    }),
+    defineField({
+      name: "missionDescription",
+      title: "Mission Description",
+      type: "text",
+      rows: 4,
+    }),
+  ],
+});
+
+const legacyArchitectureSection = defineType({
+  name: "legacyArchitectureSection",
+  title: "Legacy Architecture Section",
+  type: "object",
+  fields: [
+    ...sectionIntroFields,
+    defineField({
+      name: "modules",
+      title: "Modules",
+      type: "array",
+      of: [defineArrayMember({ type: "moduleItem" })],
+    }),
+  ],
+});
+
+const legacyCapabilitiesSection = defineType({
+  name: "legacyCapabilitiesSection",
+  title: "Legacy Capabilities Section",
+  type: "object",
+  fields: [
+    ...sectionIntroFields,
+    defineField({
+      name: "items",
+      title: "Capabilities",
+      type: "array",
+      of: [defineArrayMember({ type: "stringValueItem" })],
+    }),
+  ],
+});
+
+const legacyAerospaceFeature = defineType({
+  name: "legacyAerospaceFeature",
+  title: "Legacy Feature Highlight",
+  type: "object",
+  fields: [
+    defineField({ name: "badge", title: "Badge", type: "string" }),
+    defineField({
+      name: "title",
+      title: "Title",
+      type: "text",
+      rows: 3,
+    }),
+    defineField({
+      name: "description",
+      title: "Description",
+      type: "text",
+      rows: 4,
+    }),
+    defineField({
+      name: "objectiveLabel",
+      title: "Objective Label",
+      type: "string",
+    }),
+    defineField({
+      name: "objective",
+      title: "Objective",
+      type: "text",
+      rows: 3,
+    }),
+  ],
+});
+
+const legacyMethodologySection = defineType({
+  name: "legacyMethodologySection",
+  title: "Legacy Methodology Section",
+  type: "object",
+  fields: [
+    ...sectionIntroFields,
+    defineField({
+      name: "steps",
+      title: "Steps",
+      type: "array",
+      of: [defineArrayMember({ type: "methodologyStep" })],
+    }),
+  ],
+});
+
+const legacyVisionSection = defineType({
+  name: "legacyVisionSection",
+  title: "Legacy Vision Section",
+  type: "object",
+  fields: [...sectionIntroFields],
+});
+
 const founderSection = defineType({
   name: "founderSection",
   title: "Founder Section",
   type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
   preview: {
     select: {
       title: "name",
@@ -634,10 +885,6 @@ const contactSection = defineType({
   name: "contactSection",
   title: "Contact Section",
   type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
   preview: {
     select: {
       title: "title",
@@ -671,10 +918,6 @@ const contactDialogSection = defineType({
   name: "contactDialogSection",
   title: "Contact Dialog",
   type: "object",
-  options: {
-    collapsible: true,
-    collapsed: false,
-  },
   preview: {
     select: {
       title: "title",
@@ -706,10 +949,7 @@ const siteSettings = defineType({
   groups: [
     { name: "foundation", title: "Foundation", default: true },
     { name: "hero", title: "Hero" },
-    { name: "platform", title: "Platform" },
-    { name: "architecture", title: "Architecture" },
-    { name: "capabilities", title: "Capabilities" },
-    { name: "methodology", title: "Method" },
+    { name: "sections", title: "Page Sections" },
     { name: "founder", title: "Founder" },
     { name: "contact", title: "Contact" },
   ],
@@ -734,9 +974,12 @@ const siteSettings = defineType({
     }),
     defineField({
       name: "navigation",
-      title: "Navigation",
+      title: "Manual Navigation Items",
+      description:
+        "These are the only links shown in the header navigation. Keep this list to the four main sections.",
       type: "array",
       of: [defineArrayMember({ type: "navigationItem" })],
+      validation: (Rule) => Rule.max(4),
       group: "foundation",
     }),
     defineField({
@@ -746,40 +989,93 @@ const siteSettings = defineType({
       group: "hero",
     }),
     defineField({
+      name: "sections",
+      title: "Page Sections",
+      description:
+        "Reorder sections freely and add new ones. 'Flexible Section' is the generic option for brand new website sections.",
+      type: "array",
+      of: [
+        defineArrayMember({ type: "platformSection" }),
+        defineArrayMember({ type: "architectureSection" }),
+        defineArrayMember({ type: "capabilitiesSection" }),
+        defineArrayMember({ type: "aerospaceFeature" }),
+        defineArrayMember({ type: "methodologySection" }),
+        defineArrayMember({ type: "sectionIntro" }),
+        defineArrayMember({ type: "flexibleContentSection" }),
+      ],
+      group: "sections",
+    }),
+    defineField({
       name: "platform",
-      title: "Platform Section",
-      type: "platformSection",
-      group: "platform",
+      title: "Legacy Platform Section",
+      type: "legacyPlatformSection",
+      group: "sections",
+      hidden: true,
+      readOnly: true,
+      deprecated: {
+        reason:
+          "Legacy field kept only to avoid Studio warnings on older documents. Use Page Sections instead.",
+      },
     }),
     defineField({
       name: "architecture",
-      title: "Architecture Section",
-      type: "architectureSection",
-      group: "architecture",
+      title: "Legacy Architecture Section",
+      type: "legacyArchitectureSection",
+      group: "sections",
+      hidden: true,
+      readOnly: true,
+      deprecated: {
+        reason:
+          "Legacy field kept only to avoid Studio warnings on older documents. Use Page Sections instead.",
+      },
     }),
     defineField({
       name: "capabilities",
-      title: "Capabilities Section",
-      type: "capabilitiesSection",
-      group: "capabilities",
+      title: "Legacy Capabilities Section",
+      type: "legacyCapabilitiesSection",
+      group: "sections",
+      hidden: true,
+      readOnly: true,
+      deprecated: {
+        reason:
+          "Legacy field kept only to avoid Studio warnings on older documents. Use Page Sections instead.",
+      },
     }),
     defineField({
       name: "aerospaceFeature",
-      title: "Aerospace Feature",
-      type: "aerospaceFeature",
-      group: "capabilities",
+      title: "Legacy Feature Highlight",
+      type: "legacyAerospaceFeature",
+      group: "sections",
+      hidden: true,
+      readOnly: true,
+      deprecated: {
+        reason:
+          "Legacy field kept only to avoid Studio warnings on older documents. Use Page Sections instead.",
+      },
     }),
     defineField({
       name: "methodology",
-      title: "Methodology Section",
-      type: "methodologySection",
-      group: "methodology",
+      title: "Legacy Methodology Section",
+      type: "legacyMethodologySection",
+      group: "sections",
+      hidden: true,
+      readOnly: true,
+      deprecated: {
+        reason:
+          "Legacy field kept only to avoid Studio warnings on older documents. Use Page Sections instead.",
+      },
     }),
     defineField({
       name: "vision",
-      title: "Vision Section",
-      type: "sectionIntro",
-      group: "methodology",
+      title: "Legacy Vision Section",
+      type: "legacyVisionSection",
+      group: "sections",
+      hidden: true,
+      readOnly: true,
+      deprecated: {
+        reason:
+          "Legacy field kept only to avoid Studio warnings on older documents. Use Page Sections instead.",
+      },
     }),
     defineField({
       name: "founder",
@@ -811,14 +1107,23 @@ export const schemaTypes = [
   moduleItem,
   methodologyStep,
   contactOption,
-  sectionIntro,
   stringValueItem,
+  contentCard,
+  featurePanel,
   heroSection,
   platformSection,
   architectureSection,
   capabilitiesSection,
   aerospaceFeature,
   methodologySection,
+  sectionIntro,
+  flexibleContentSection,
+  legacyPlatformSection,
+  legacyArchitectureSection,
+  legacyCapabilitiesSection,
+  legacyAerospaceFeature,
+  legacyMethodologySection,
+  legacyVisionSection,
   founderSection,
   contactSection,
   contactDialogSection,

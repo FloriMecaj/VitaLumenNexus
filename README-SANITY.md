@@ -10,12 +10,9 @@ Everything that was handwritten in the landing page is modeled in Sanity:
 - Brand title, tagline, and footer copy
 - Navigation
 - Hero copy, CTAs, stats, and story card
-- Platform section and mission copy
-- Architecture section and module cards
-- Capabilities list
-- Aerospace feature block
-- Methodology steps
-- Vision section
+- Ordered page sections that can be rearranged
+- Reusable built-in section types for platform, architecture, capabilities, feature blocks, method, and intro sections
+- A generic `Flexible Section` type for brand new sections without code changes
 - Founder section, paragraphs, and quote
 - Contact section and contact dialog options
 
@@ -62,8 +59,11 @@ Then open:
 1. Open `/studio`
 2. Open `Website Content`
 3. Edit the sections you want
-4. Publish changes
-5. Refresh the website if needed
+4. Reorder or add entries inside `Page Sections`
+5. Use `Flexible Section` when you need a completely new section
+6. Set `Navigation Label` on a section if it should appear in the header automatically
+7. Publish changes
+8. Refresh the website if needed
 
 ## Notes
 
