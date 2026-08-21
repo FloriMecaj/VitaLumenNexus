@@ -1,5 +1,5 @@
 import { createClient } from "@sanity/client";
-import { createSiteSettingsDocument } from "../src/sanity/lib/site-settings-document.ts";
+import { createSiteSettingsDocument } from "../src/sanity/lib/site-settings-document";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;

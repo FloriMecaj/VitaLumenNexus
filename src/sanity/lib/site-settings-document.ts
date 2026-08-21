@@ -1,4 +1,4 @@
-import { defaultHomePageContent } from "./default-content.ts";
+import { defaultHomePageContent } from "./default-content";
 
 const withKeys = <T extends object>(items: T[], prefix: string) =>
   items.map((item, index) => ({
